@@ -25,7 +25,7 @@ function App() {
           console.error(`Servidor respondeu mas com o erro:${error.response.data.mensagem ?? error.response.data}`)
           alert(`Servidor respondeu mas com o erro:${error.response.data.mensagem ?? "olhe o console do navegador para mais informa\u00e7\u00f5es"}`)
         }
-        else { //Não teve resposta do servidor, então mostramos o erro do axios.
+        else { //Não teve resposta do servidor, então mostramos o erro do axios.vercel
           console.error(`Erro Axios: ${error.message}`)
           alert(`Servidor não respondeu, voc\u00ea ligou o backend? Erro do Axios: ${error.message ?? "Erro desconhecido"}`)
         }
