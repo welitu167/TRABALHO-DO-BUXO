@@ -2,9 +2,9 @@
   "name": "1023a-backend-novo",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc",  
-    "start": "node dist/index-mongo.js",  
-    "dev": "tsx src/index-mongo.ts"  
+    "build": "npx tsc", 
+    "start": "node dist/index-mongo.js",
+    "dev": "npx tsx src/index-mongo.ts"
   },
   "author": "",
   "license": "ISC",
@@ -25,7 +25,7 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.3.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
   }
 }
