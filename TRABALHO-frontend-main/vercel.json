@@ -1,5 +1,15 @@
 {
-    "rewrites":[
-        {"source":"/api/:path*","destination":"https://one023a-backend-novo-73t6.onrender.com/:path*"}
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/index-mongo.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/index-mongo.ts"
+    }
+  ]
 }
