@@ -8,7 +8,7 @@ interface RequestAuth extends Request{
 }
 
 const adminAuth = (req: RequestAuth, res: Response, next: NextFunction) => {
-  // auth middleware must run before this and set req.role
+  // auth middleware must run before this and set req.role.render
   const tipo = (req.tipo ?? '').toString().toUpperCase()
   if (tipo !== 'ADMIN') {
     return res.status(403).json({ message: 'Acesso apenas para administradores' });
