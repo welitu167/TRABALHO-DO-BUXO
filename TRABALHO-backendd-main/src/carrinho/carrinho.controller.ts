@@ -114,7 +114,7 @@ class CarrinhoController {
         res.status(200).json(carrinho);
     }
     async removerItem(req:Request, res:Response) {
-        // aceita produtoId no body ou na rota (/carrinho/:produtoId)
+        // aceita produtoId no body ou na rota (/carrinho/:produtoId) 
         const produtoId = req.body.produtoId ?? req.params.produtoId;
         // usuarioId preferencialmente vem do token (req.usuarioId) — compatível com Auth middleware
         // (quando este controller for usado sem Auth, aceita usuarioId no body)

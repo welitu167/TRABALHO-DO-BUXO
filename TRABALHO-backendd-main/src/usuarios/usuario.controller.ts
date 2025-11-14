@@ -45,8 +45,13 @@ class UsuarioController {
     const tipo = (usuario.role ?? 'user').toString().toUpperCase() === 'ADMIN' ? 'ADMIN' : 'USER'
     // criar token contendo o id e o tipo do usuário
     const token = jwt.sign({usuarioId: usuario._id, tipo}, process.env.JWT_SECRET!, { expiresIn: '2h' })
-    // Devolver token e tipo (compatibiliza com 'role' existente)
-    res.status(200).json({ token, tipo, role: usuario.role ?? 'user' })
+    // Devolver token, tipo e nome do usuário
+    res.status(200).json({ 
+      token, 
+      tipo, 
+      nome: usuario.nome,
+      role: usuario.role ?? 'user' 
+    })
     }
 }
 export default new UsuarioController();

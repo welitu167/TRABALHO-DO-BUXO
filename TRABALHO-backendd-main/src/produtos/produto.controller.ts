@@ -27,18 +27,58 @@ interface Produto {
 class ProdutoController {
     private validarProduto(produto: Partial<Produto>) {
         const erros = [];
-        if (!produto.nome?.trim()) erros.push('Nome é obrigatório');
-        if (!produto.preco || produto.preco <= 0) erros.push('Preço deve ser maior que zero');
-        if (!produto.descricao?.trim()) erros.push('Descrição é obrigatória');
-        if (!produto.urlfoto?.trim()) erros.push('URL da foto é obrigatória');
+        
+        // Verifica nome
+        if (!produto.nome || (typeof produto.nome === 'string' && !produto.nome.trim())) {
+            erros.push('Nome é obrigatório');
+        }
+        
+        // Verifica preço
+        if (produto.preco === undefined || produto.preco === null || produto.preco === 0 || produto.preco < 0) {
+            erros.push('Preço deve ser maior que zero');
+        }
+        
+        // Verifica descrição
+        if (!produto.descricao || (typeof produto.descricao === 'string' && !produto.descricao.trim())) {
+            erros.push('Descrição é obrigatória');
+        }
+        
+        // Verifica URL foto
+        if (!produto.urlfoto || (typeof produto.urlfoto === 'string' && !produto.urlfoto.trim())) {
+            erros.push('URL da foto é obrigatória');
+        }
         
         if (erros.length > 0) {
             throw new ValidationError('Dados inválidos do produto', erros);
         }
     }
 
+    // Validação para EDIÇÃO (permite campos parciais)
+    private validarProdutoEdicao(produto: Partial<Produto>) {
+        const erros = [];
+        // Na edição, valida apenas os campos que foram enviados
+        if (produto.nome !== undefined && !produto.nome?.trim()) 
+            erros.push('Nome não pode estar vazio');
+        if (produto.preco !== undefined && produto.preco <= 0) 
+            erros.push('Preço deve ser maior que zero');
+        if (produto.descricao !== undefined && !produto.descricao?.trim()) 
+            erros.push('Descrição não pode estar vazia');
+        if (produto.urlfoto !== undefined && !produto.urlfoto?.trim()) 
+            erros.push('URL da foto não pode estar vazia');
+        
+        if (erros.length > 0) {
+            throw new ValidationError('Dados inválidos', erros);
+        }
+    }
+
     async adicionar(req: RequestAuth, res: Response) {
-        const produto = req.body as Produto;
+        let produto = req.body as Produto;
+        
+        // Converter preco para número se vier como string
+        if (typeof produto.preco === 'string') {
+            produto.preco = parseFloat(produto.preco);
+        }
+        
         this.validarProduto(produto);
         
         const resposta = await db.collection('produtos').insertOne(produto);
@@ -54,8 +94,15 @@ class ProdutoController {
         const { id } = req.params;
         if (!id) throw new ValidationError('Id do produto é obrigatório');
 
-        const produto = req.body as Produto;
-        this.validarProduto(produto);
+        let produto = req.body as Partial<Produto>;
+        
+        // Converter preco para número se vier como string
+        if (typeof produto.preco === 'string') {
+            produto.preco = parseFloat(produto.preco);
+        }
+        
+        // Usa validação de EDIÇÃO (permite campos parciais)
+        this.validarProdutoEdicao(produto);
 
         const result = await db.collection('produtos').updateOne(
             { _id: new ObjectId(id) },

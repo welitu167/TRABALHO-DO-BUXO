@@ -16,6 +16,7 @@ function App() {
   const [produtos, setProdutos] = useState<ProdutoType[]>([])
   const [carrinho, setCarrinho] = useState<any>(null)
   const [tipo, setTipo] = useState<string | null>(null)
+  const [nome, setNome] = useState<string | null>(null)
 
   useEffect(() => {
     api.get("/produtos")
@@ -35,6 +36,9 @@ function App() {
   useEffect(()=>{
     const t = localStorage.getItem('tipo') || localStorage.getItem('role')
     if(t) setTipo(t.toString().toUpperCase())
+    
+    const n = localStorage.getItem('nome')
+    if(n) setNome(n)
   }, [])
 
   useEffect(()=>{
@@ -107,7 +111,9 @@ function App() {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     localStorage.removeItem('tipo')
+    localStorage.removeItem('nome')
     setTipo(null)
+    setNome(null)
     window.location.href = '/login'
   }
 
@@ -144,7 +150,13 @@ function App() {
       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
         <h1>Loja</h1>
         <div>
-          {tipo ? <span style={{marginRight:8}}>Tipo: {tipo}</span> : null}
+          {tipo && nome ? (
+            <span style={{marginRight:16, fontSize: '14px'}}>
+              👤 <strong>{nome}</strong> ({tipo})
+            </span>
+          ) : tipo ? (
+            <span style={{marginRight:8}}>Tipo: {tipo}</span>
+          ) : null}
           {tipo === 'ADMIN' && (
             <button 
               onClick={() => window.location.href = '/admin'} 
@@ -177,7 +189,28 @@ function App() {
             return (
               <div key={produto._id}>
                 <h3>{produto.nome}</h3>
-                <img src={produto.urlfoto} alt='Imagem do produto' style={{maxWidth:200}}/>
+                {/* Container de imagem com tamanho fixo */}
+                <div style={{
+                  width: '200px',
+                  height: '200px',
+                  overflow: 'hidden',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#f0f0f0',
+                  marginBottom: '12px'
+                }}>
+                  <img 
+                    src={produto.urlfoto} 
+                    alt='Imagem do produto' 
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                </div>
                 <p>Preço: R$ {produto.preco}</p>
                 <p>Descrição: {produto.descricao}</p>
                 <button onClick={()=>adicionarItemCarrinho(produto._id)}>Adicionar ao Carrinho</button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/api';
+import './AdminDashboard.css';
 
 interface Usuario {
     _id: string;
@@ -58,27 +59,61 @@ function AdminDashboard() {
     }
 
     return (
-        <div>
+        <div className="admin-dashboard">
             <h2>Admin Dashboard</h2>
-            {erro && <p style={{ color: 'red' }}>{erro}</p>}
+            {erro && <p className="erro-mensagem">{erro}</p>}
+            
             <h3>Usuários</h3>
-            <ul>
-                {usuarios.map(usuario => (
-                    <li key={usuario._id}>
-                        {usuario.nome} ({usuario.email}) - {usuario.tipo}
-                        <button onClick={() => removerUsuario(usuario._id)}>Remover</button>
-                    </li>
-                ))}
-            </ul>
+            {usuarios.length === 0 ? (
+                <p className="lista-vazia">Nenhum usuário encontrado</p>
+            ) : (
+                <ul className="usuarios-lista">
+                    {usuarios.map(usuario => (
+                        <li key={usuario._id}>
+                            <div className="item-info">
+                                <span className="usuario-info">
+                                    {usuario.nome}
+                                    <span className="usuario-email">({usuario.email})</span>
+                                    <span className="usuario-tipo">{usuario.tipo}</span>
+                                </span>
+                            </div>
+                            <button 
+                                className="btn-remover"
+                                onClick={() => removerUsuario(usuario._id)}
+                            >
+                                Remover
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
+            
             <h3>Carrinhos</h3>
-            <ul>
-                {carrinhos.map(carrinho => (
-                    <li key={carrinho._id}>
-                        {carrinho.usuarioNome} - Total: R$ {carrinho.total}
-                        <button onClick={() => removerCarrinho(carrinho._id)}>Remover</button>
-                    </li>
-                ))}
-            </ul>
+            {carrinhos.length === 0 ? (
+                <p className="lista-vazia">Nenhum carrinho encontrado</p>
+            ) : (
+                <ul className="carrinhos-lista">
+                    {carrinhos.map(carrinho => (
+                        <li key={carrinho._id}>
+                            <div className="item-info">
+                                <div className="carrinho-info">
+                                    <span className="carrinho-usuario">{carrinho.usuarioNome}</span>
+                                    <span className="carrinho-total">Total: R$ {carrinho.total.toFixed(2)}</span>
+                                    <span className="carrinho-data">
+                                        Atualizado em: {new Date(carrinho.dataAtualizacao).toLocaleDateString()}
+                                    </span>
+                                </div>
+                            </div>
+                            <button 
+                                className="btn-remover"
+                                onClick={() => removerCarrinho(carrinho._id)}
+                            >
+                                Remover
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }

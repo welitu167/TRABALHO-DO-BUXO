@@ -1,4 +1,0 @@
-[dotenv@17.2.1] injecting env (4) from .env -- tip: 📡 version env with Radar: https://dotenvx.com/radar
-[dotenv@17.2.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
-Server is running at http://localhost:8000/
-Connected to MongoDB

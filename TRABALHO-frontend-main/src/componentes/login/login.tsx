@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/api'
+import api from '../../api/api';
+import './Login.css';
 
 interface LoginResponse {
     token: string;
     tipo: string;
+    nome?: string;
 }
 
 function Login() {
@@ -23,7 +25,7 @@ function Login() {
             const response = await api.post<LoginResponse>('/login', { email, senha });
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('tipo', response.data.tipo);
-            // redirect to home (App.tsx handles role-based UI)
+            localStorage.setItem('nome', response.data.nome || 'Usuário');
             navigate('/');
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -40,32 +42,53 @@ function Login() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleLogin}>
-                <div>
+        <div className="login-container">
+            {/* Texto de fundo - AGORA DEVE APARECER */}
+            <div className="brand-text">Augusto´s MarketGreen</div>
+            <div className="particles"></div>
+            
+            <form className="login-form" onSubmit={handleLogin}>
+                <h1 className="login-title">Login</h1>
+                
+                <div className="form-group">
                     <input 
                         type="email" 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
+                        className="form-input"
                         required
+                        disabled={isLoading}
                     />
                 </div>
-                <div>
+                
+                <div className="form-group">
                     <input 
                         type="password"
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         placeholder="Senha"
+                        className="form-input"
                         required
+                        disabled={isLoading}
                     />
                 </div>
-                {erro && <p>{erro}</p>}
+                
+                {erro && <div className="error-message">{erro}</div>}
+                
                 <button 
                     type="submit" 
+                    className="login-button"
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Carregando...' : 'Entrar'}
+                    {isLoading ? (
+                        <>
+                            <span className="loading-spinner"></span>
+                            Carregando...
+                        </>
+                    ) : (
+                        'Entrar'
+                    )}
                 </button>
             </form>
         </div>
